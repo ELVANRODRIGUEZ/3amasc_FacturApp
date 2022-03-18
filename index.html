@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <title>Facturas</title>
+
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- SheetJs -->
+  <script lang=javascritp src="xlsx.full.min.js"></script>
+  <!-- FileSaver -->
+  <script lang=javascritp src="FileSaver.min.js"></script>
+
+  <!-- Link to BOOTSTRAP. -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <!-- Optional Bootstrap JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+  </script>
+
+  <!-- Metatag to start setting resposiveness -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <!-- link to CSS. -->
+  <link rel="stylesheet" href="index.css">
+  <!-- Firebase Reference -->
+  <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+
+  <!-- Moment.js Reference -->
+  <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+
+  <!-- Numberal.js Reference -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+
+</head>
+
+<body>
+
+  <!-- ==================================================== JUMBOTRON -->
+
+  <div class="jumbotron jumbotron-fluid bg-dark text-light">
+    <h4 id="mainHeader" class="text-center">FAC-MATCH PARA CONCILIACION FISCAL</h4>
+  </div>
+
+
+  <div class="container">
+
+    <!-- ==================================================== TABLE TITLE -->
+
+      <div id="selecciones" class="row" class="d-flex container" style="width:100%;justify-content:center">
+        <div class="col-lg-5">
+          <div class="card card-default">
+            <div id="mainDescription" class="card-header">
+              <h6>FACTURAS SAT</h6>
+              <div class="input-group mb-3">
+                <div class="custom-file">
+                  <input type="file" onclick="readFiles('sat')" class="custom-file-input" id="satFiles"
+                    aria-describedby="inputGroupFileAddon01" multiple="multiple">
+                  <label class="custom-file-label" for="satFiles">Ingresar facturas descargadas del SAT</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="card card-default">
+            <div id="mainDescription2" class="card-header">
+              <h6>FACTURAS RECIBIDAS</h6>
+              <div class="input-group mb-3">
+                <div class="custom-file">
+                  <input type="file" onclick="readFiles('rec')" class="custom-file-input" id="recFiles"
+                    aria-describedby="inputGroupFileAddon01" multiple="multiple">
+                  <label class="custom-file-label" for="recFiles">Ingresar facturas recibidas</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- ==================================================== TABLE CONCILIACION -->
+    
+    <div class="row" style="width:100%;justify-content:center">
+      <div class="col-lg-6">
+        <div class="card-body tableDiv" style="border-radius:0">
+          <table id="satTableBody" class="table">
+            <thead>
+              <tr>
+                <th id="Harchivo" scope="col">Archivo</th>
+                <th id="Hproveedor" scope="col">Proveedor</th>
+                <th id="HRFC" scope="col">RFC Emisor</th>
+                <th id="Hfecha" scope="col">Fecha</th>
+                <th id="HfolioFiscal" scope="col">Folio fiscal</th>
+                <th id="Htotal" scope="col">Total</th>
+                <th id="HIVA" scope="col">IVA</th>
+                <th id="HIVA" scope="col">RFC Beneficiario</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ==================================================== REG INDICATORS -->
+        <ul id="Reg-SAT-line" class="list-group">
+          <li class="list-group-item" >TOTAL DE REGISTROS SAT:</li>
+          <li id="Reg-SAT" class="list-group-item">0</li>
+        </ul>
+        <ul id="Reg-SATmatch-line" class="list-group">
+          <li class="list-group-item" >REGISTROS SAT NO CONCILIADOS:</li>
+          <li id="Reg-SATmatch" class="list-group-item">0</li>
+        </ul>
+      </div>
+
+      
+      <div class="col-lg-6">
+        <div class="card-body tableDiv" style="border-radius:0">
+          <table id="recTableBody" class="table">
+            <thead>
+              <tr>
+                <th id="Harchivo" scope="col">Archivo</th>
+                <th id="Hproveedor" scope="col">Proveedor</th>
+                <th id="HRFC" scope="col">RFC Emisor</th>
+                <th id="Hfecha" scope="col">Fecha</th>
+                <th id="HfolioFiscal" scope="col">Folio fiscal</th>
+                <th id="Htotal" scope="col">Total</th>
+                <th id="HIVA" scope="col">IVA</th>
+                <th id="HIVA" scope="col">RFC Beneficiario</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- ==================================================== REG INDICATORS -->
+        <ul id="Reg-REC-line" class="list-group">
+          <li class="list-group-item" >TOTAL DE REGISTROS RECIBIDOS:</li>
+          <li id="Reg-REC" class="list-group-item">0</li>
+        </ul>
+        <ul id="Reg-RECmatch-line" class="list-group">
+          <li class="list-group-item" >REGISTROS RECIBIDOS NO CONCILIADOS:</li>
+          <li id="Reg-RECmatch" class="list-group-item">0</li>
+        </ul>
+      </div>
+
+      </div>
+    </div>
+
+    <div>
+
+    </div>
+   
+    <!-- ==================================================== EXCEL BUTTON -->
+    <div class="row" style="width:100%;justify-content:center">
+      <div class="col-lg-6">
+        <button type="button" id="genExclSAT" class="btn btn-dark">Registros sin Cruce a Excel</button>
+      </div>
+    <!-- ==================================================== TABLE FACTURA -->
+</body>
+
+<!-- Robust JQuery version -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Link to Javascript file -->
+<script type="text/javascript" src="javascript.js"></script>
+
+</html>
