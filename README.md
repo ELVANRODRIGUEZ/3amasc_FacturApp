@@ -2,4 +2,4 @@
 
 **DESCRIPTION**
 
-This is very handy web app that takes in an XML Mexican invoice (or a bunch of them) and read through each one to get certain information that is then shown within a table. Info like provider data, fiscal UUID, invoice total ammount, invoice ammount without taxes etc. Additionally, it calculates some more data to show the user how deductible that invoice might be.
+This is very handy web app that reads and compares XML Mexican invoices and retrieves info like provider data, fiscal UUID, invoice total ammount, invoice ammount without taxes etc. It can be useful to while doing fiscal reconciliations or any other invoice analysis.
